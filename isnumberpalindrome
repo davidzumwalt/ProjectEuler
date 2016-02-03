@@ -1,0 +1,11 @@
+## Checks if a number is a palindrome by converting it into a vector of characters, then seeing if it is identical to the reversed string.
+
+isnumberpalindrome<-function(x){
+  x<-as.character(x)
+  x<-unlist(strsplit(x,""))
+  if(paste(x,collapse="")==paste(rev(x),collapse='')){
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
