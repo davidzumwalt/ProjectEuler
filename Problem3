@@ -18,6 +18,7 @@ largestprimefactor<-function(x = 600851475143){
   q ## return the last prime number in the list which was a factor of the input value
 }
 
+
 ## > system.time(largestprimefactor())
 ##   user  system elapsed 
 ##      0       0       0 
