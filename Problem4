@@ -12,3 +12,9 @@ palindromenumber<-function(){
   
   ## this can also be used to find the second (or any position) largest palindrome for a given number of digits
 }
+
+## Could maybe optimize this, but not bad.
+
+## > system.time(palindromenumber())
+##   user  system elapsed 
+##   0.28    0.00    0.28 
