@@ -1,0 +1,14 @@
+## A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+
+## Find the largest palindrome made from the product of two 3-digit numbers.
+
+## The answer is 906609.
+
+palindromenumber<-function(){
+  source('isnumberpalindrome.R') ## requires my isnumberpalindrome.R function which checks if a number is a palindrome
+  x<-900:999 ## in principle, one could go from 1:999, but the largest palindrome of 3-digit numbers is likely to follow the same pattern as 2-digit numbers
+  t<-tcrossprod(x,x) ## make a matrix of all possible product combinations
+  max(t[lapply(t,function(x) isnumberpalindrome(x))==TRUE]) ## keep only those values which are palindromes, then return the largest one
+  
+  ## this can also be used to find the second (or any position) largest palindrome for a given number of digits
+}
