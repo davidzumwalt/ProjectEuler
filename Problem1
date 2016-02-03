@@ -18,3 +18,7 @@ multiples3and5<-function(x = 1000){
   y<-1:(x-1)
   sum(y[!y%%3|!y%%5])
 }
+
+## > system.time(multiples3and5())
+##   user  system elapsed 
+##      0       0       0 
