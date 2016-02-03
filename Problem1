@@ -1,0 +1,21 @@
+## If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
+
+## Find the sum of all the multiples of 3 or 5 below 1000.
+
+## This function takes any integer argument for x. The default is 1000 to solve the problem.
+
+## The answer is 233168
+
+multiples3and5<-function(x = 1000){
+## The C way
+  
+#  y<-0
+#  for(i in 1:(x-1)){
+#    if(!i%%3|!i%%5) y<-y+i
+#  }
+#  y
+  
+## The R way
+  y<-1:(x-1)
+  sum(y[!y%%3|!y%%5])
+}
