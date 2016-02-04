@@ -1,0 +1,29 @@
+## The nth term of the sequence of triangle numbers is given by, tn = ½n(n+1); so the first ten triangle numbers are:
+## 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...
+## By converting each letter in a word to a number corresponding to its alphabetical position and adding these values we form a word value. For example, the word value for SKY is 19 + 11 + 25 = 55 = t10. If the word value is a triangle number then we shall call the word a triangle word.
+## Using words.txt (right click and 'Save Link/Target As...'), a 16K text file containing nearly two-thousand common English words, how many are triangle words?
+
+## The answer is 162.
+
+howmanytri<-function(){
+  options(warn = -1) ## reading the data in gives a warning about the table header but we can ignore it
+  #y<-read.csv("https://projecteuler.net/project/resources/p042_words.txt") ## if you want to get the data directly from Project Euler
+  y<-read.csv("p042_words.csv") ## local data
+  y<-colnames(y) ## set the headers to be the data itself
+  x<-vector(mode='numeric',length=length(y)) ## initialize
+  z<-0
+  for(i in 1:length(y)){
+    x[i]<-sum(unlist(lapply(unlist(strsplit(y[i],"")),function(x) which(LETTERS==x)))) ## tough to read. This splits the strings up into individual characters
+    ## then it checks the LETTERS vector to see which index it is to get the coded value. Then it sums up all the coded values of each letter in a word.
+    t<-(sqrt(8*x[i]+1)-1)/2 ## test for triangular numbers (https://en.wikipedia.org/wiki/Triangular_number#Triangular_roots_and_tests_for_triangular_numbers)
+    if(t%%1==0){ ## if it's an integer then it's a valid triangular number
+      z<-z+1 ## increment
+    }
+  }
+  z ## print the number
+}
+
+## Probably could be faster but it's not too bad.
+## > system.time(howmanytri())
+##    user  system elapsed 
+##    0.32    0.00    0.33 
