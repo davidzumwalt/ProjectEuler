@@ -1,0 +1,24 @@
+## 2520 is the smallest number that can be divided by each of the numbers from 
+## 1 to 10 without any remainder.
+
+## What is the smallest positive number that is evenly divisible by all of the 
+## numbers from 1 to 20?
+
+## The answer is 232792560.
+
+## I'm using the method of prime factorization. https://en.wikipedia.org/wiki/Least_common_multiple#Finding_least_common_multiples_by_prime_factorization
+
+smallestmultiple<-function(x=20){
+source('sieve.R')
+  y<-sieve(x) ## generate a vector of the first x primes. This guarantees that primes less than x will be generated
+  y<-y[y<=x]  ## keep only primes whose value is less than x primefactorpower<-vector(mode='numeric',length=length(y)) ## initialize prime factor power vector
+  primefactorpower<-vector(mode = 'numeric',length=length(y)) ## initializing vector
+  for(i in 1:length(y)){
+    primefactorpower[i]<-max(floor(log(1:x,y[i]))) ## finds the highest power of a given prime in the set 1:x and stores it
+  }
+  prod(y^primefactorpower) ## gives the product of the vectorized powers of primes
+}
+
+## > system.time(smallestmultiple())
+##    user  system elapsed 
+##       0       0       0 
