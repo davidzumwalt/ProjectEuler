@@ -1,0 +1,27 @@
+## You are given the following information, but you may prefer to do some 
+## research for yourself.
+
+## 1 Jan 1900 was a Monday.
+## Thirty days has September,
+## April, June and November.
+## All the rest have thirty-one,
+## Saving February alone,
+## Which has twenty-eight, rain or shine.
+## And on leap years, twenty-nine.
+## A leap year occurs on any year evenly divisible by 4, but not on a century unless it is divisible by 400.
+
+## How many Sundays fell on the first of the month during the 
+## twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+## The answer is 171.
+
+sundaysfirstofthemonth<-function(x=as.Date("1 Jan 1901","%d %B %Y"),y=as.Date("31 Dec 2000","%d %B %Y")){ ## Can enter alternate dates, but this is the default.
+  firstofthemonth<-seq(x, y, by="1 month") ## Go from the first date to the last, jumping by one month increments.
+  ## This will return a list of all dates which fall on the first of the month, since 1 Jan 1901 falls on the first.
+  sundays<-weekdays(firstofthemonth)=="Sunday" ## Return a logical list of those days which are also a Sunday (returns a sequence of TRUE and FALSE)
+  sum(sundays) ## Add up all the TRUEs which evaluate to 1, thereby counting up all the Sundays on the first of the month.
+}
+
+## > system.time(sundaysfirstofthemonth())
+##    user  system elapsed 
+##       0       0       0 
