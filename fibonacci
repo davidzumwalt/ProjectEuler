@@ -1,0 +1,26 @@
+## This function computes either the xth fibonacci number, or returns a vector of 1:x fibonacci numbers in sequence, depending on whether
+## you comment out lines of code.
+
+fibonacci<- function(x){
+##  f<-vector(mode = 'numeric',length=x) ##if you want a vector of all fib numbers, keep this.
+  fib1<-1
+  fib2<-1
+##  f[1]<-1 ##if you want a vector of all fib numbers, keep this.
+##  f[2]<-1 ##if you want a vector of all fib numbers, keep this.
+  if(x==1){ ## initialize the first two fibonacci numbers
+    fib<-1 
+  }
+  if(x==2){
+    fib<-1
+  } 
+  if(x>2){ 
+    for(i in 3:x){
+    fib<-fib1+fib2 ## compute the fibonacci sum
+##  f[i]<-fib ##if you want a vector of all fib numbers, keep this.
+    fib2<-fib1 ## updating numbers to be summed next
+    fib1<-fib
+    }
+  }
+  fib  ## return the xth fibonacci number
+  ## f ##if you want a vector of all fib numbers, keep this.
+}
