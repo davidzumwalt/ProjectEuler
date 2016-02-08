@@ -22,7 +22,7 @@ namesscores<-function(){
 
 ## This can also be achieved using a for loop but I find it costs about 25% more time on a single core.
 
-## Not the fastest, but a >60% of that time is spent parsing the file.
+## Not the fastest, but >60% of that time is spent parsing the file.
 ## > system.time(namesscores())
 ##    user  system elapsed 
 ##    1.24    0.00    1.23 
