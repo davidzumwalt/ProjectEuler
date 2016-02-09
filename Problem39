@@ -22,6 +22,7 @@ integerrighttris <- function(x = 1000) {
   which(max(m)==m) ## Which index, and therefore which perimeter value, has the greatest number of solutions?
 }
 
+
 ## > system.time(integerrighttris())
 ##    user  system elapsed 
 ##    0.72    0.00    0.72 
