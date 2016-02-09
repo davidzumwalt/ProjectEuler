@@ -1,0 +1,27 @@
+## If p is the perimeter of a right angle triangle with integral length sides, 
+## {a,b,c}, there are exactly three solutions for p = 120.
+
+## {20,48,52}, {24,45,51}, {30,40,50}
+
+## For which value of p ≤ 1000, is the number of solutions maximised?
+
+## The answer is 840.
+
+integerrighttris <- function(x = 1000) {
+  m <- vector(mode = 'numeric',length = x) ## initialize vector of the number of solutions.
+  for (j in 1:x) { ## go through perimeter values 1:x, typically 1000 to find the number of solutions for each number.
+    k <- numeric() ## clear a vector so that we can store valid triangle lengths in it
+    for (i in 1:j) { ## It is guaranteed that the length of one side cannot exceed the perimeter. I could probably pare this down further.
+      a <- j * (2 * i - j) / (2 * (i - j)) ## See comments for justification.
+      if(a<=0) break ## We only care about positive solutions.
+      if(a==Inf) break ## For 2i=j or i=j, a blows up and the equation is invalid.
+      if (a %% 1 == 0) k <- append(k,a) ## store valid solutions in a vector. I checked and growing the vector here doesn't appear to cost any obvious time and it's simpler than having a counter.
+    }
+    m[j] <- length(k) / 2 ## Store the value of the length of the solutions vector divided by 2, since the solutions vector contains solutions for sides a AND b.
+  }
+  which(max(m)==m) ## Which index, and therefore which perimeter value, has the greatest number of solutions?
+}
+
+## > system.time(integerrighttris())
+##    user  system elapsed 
+##    0.72    0.00    0.72 
