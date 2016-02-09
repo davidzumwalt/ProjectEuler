@@ -12,7 +12,7 @@ integerrighttris <- function(x = 1000) {
   for (j in 1:x) { ## go through perimeter values 1:x, typically 1000 to find the number of solutions for each number.
     k <- numeric() ## clear a vector so that we can store valid triangle lengths in it
     for (i in 1:j) { ## It is guaranteed that the length of one side cannot exceed the perimeter. I could probably pare this down further.
-      a <- j * (2 * i - j) / (2 * (i - j)) ## See comments for justification.
+      a <- j * (2 * i - j) / (2 * (i - j)) ## *See comments for justification.
       if(a<=0) break ## We only care about positive solutions.
       if(a==Inf) break ## For 2i=j or i=j, a blows up and the equation is invalid.
       if (a %% 1 == 0) k <- append(k,a) ## store valid solutions in a vector. I checked and growing the vector here doesn't appear to cost any obvious time and it's simpler than having a counter.
@@ -22,7 +22,32 @@ integerrighttris <- function(x = 1000) {
   which(max(m)==m) ## Which index, and therefore which perimeter value, has the greatest number of solutions?
 }
 
-
 ## > system.time(integerrighttris())
 ##    user  system elapsed 
 ##    0.72    0.00    0.72 
+
+## *This deserves some justification.
+
+## The available equations to us are (1) a+b+c=P, and (2) a^2+b^2=c^2.
+
+## We have three unknowns, so we need three independent equations. We only have two, so we can't analytically solve for 
+## solutions given a perimeter P. However, we can solve for a (or b) in terms of b (or a) and P by solving (1) for c and 
+## placing it in (2), and then solving for a.
+
+## Doing this returns a = (P (2 b-P))/(2 (b-P)) and b!=P. We only care about integer values of a and b, so in the code I 
+## check to see if the solution for a, given an integer b, is also an integer. I also don't care about negative solutions, 
+## since they don't represent real triangles, and I only accept solutions for which b!=P, which in my case means I reject 
+## a=Inf solutions.
+
+## Going through the list, it can be seen that starting at a small b and working up returns a large a value which decreases 
+## as b increases. Therefore, I can get out of the loop once a is negative or 0, since I know all further solutions will be 
+## even more negative. This saves some time.
+
+## This solution ends up returning all values for a and b which are solutions to the problem. For example, for p = 120, the 
+## solutions returned would be 48, 45, 40, 30, 24, 20. Since all of these numbers are paired with another from the same set, 
+## I cut the number of solutions in half to avoid over-counting.
+
+## There are ways of optimizing this further - for example, instead of storing a vector that contains all the values, I could 
+## only update a variable if the new solution number is larger than the old one, but I like to see what's going on, and looking 
+## at the vector m gives insights into how the solutions are populated, how frequently they occur, and what the mode of the 
+## solution space is.
