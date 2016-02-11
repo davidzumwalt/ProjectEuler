@@ -1,0 +1,12 @@
+## The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+## Find the sum of all the primes below two million.
+
+source('sieve.R') ## Retrieve the sieve function.
+sum(as.numeric(sieve(2,2e6))) ## The first argument only needs to be above 1 since it otherwise just returns 2. The second argument will
+## make the sieve function return all primes below that value.
+## Summing them is a piece of cake, but generating all primes below 2 million takes a little time.
+
+## Could indicate room to improve on optimizing the sieve.
+## > system.time(sum(as.numeric(sieve(2,2e6))))
+##    user  system elapsed 
+##    7.97    0.00    8.02 
