@@ -1,0 +1,80 @@
+## By starting at the top of the triangle below and moving to 
+## adjacent numbers on the row below, the maximum total from top 
+## to bottom is 23.
+
+##    3
+##   7 4
+##  2 4 6
+## 8 5 9 3
+
+## That is, 3 + 7 + 4 + 9 = 23.
+
+## Find the maximum total from top to bottom of the triangle below:
+  
+##               75
+##              95 64
+##             17 47 82
+##            18 35 87 10
+##           20 04 82 47 65
+##          19 01 23 75 03 34
+##         88 02 77 73 07 63 67
+##        99 65 04 28 06 16 70 92
+##       41 41 26 56 83 40 80 70 33
+##      41 48 72 33 47 32 37 16 94 29
+##     53 71 44 65 25 43 91 52 97 51 14
+##    70 11 33 28 77 73 17 78 39 68 17 57
+##   91 71 52 38 17 14 91 43 58 50 27 29 48
+##  63 66 04 68 89 53 67 30 73 16 69 87 40 31
+## 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23
+
+## NOTE: As there are only 16384 routes, it is possible to solve this 
+## problem by trying every route. However, Problem 67, is the same challenge 
+## with a triangle containing one-hundred rows; it cannot be solved by brute 
+## force, and requires a clever method! ;o)
+
+## The answer is 1074.
+
+## The basic method here is very similar to problem 15 in that at each layer, you 
+## only care about what's going on to the right or below you 
+## (or to the down and right, or down and left in this case). This 
+## reduction of space lends itself to a dynamic programming approach.
+
+## Instead of dealing with triangles, we'll store the data in a matrix with the rest of the matrix being 0s.
+
+## Then, starting at the second layer from the bottom, we'll replace the 
+## values of the matrix with the sum of the value and whatever is the 
+## largest of the adjacent values of the layer below. Then we'll work our way
+## up to the top layer, where the value will be replaced by the largest sum path.
+
+## Working bottom up is essential to avoid local minima. For example, if you start
+## top down you will be fooled into thinking the answer is 1064 instead of 1074.
+
+maxpathsum<-function(){
+  options(warn=-1) ## Get rid of a warning in readLines.
+  x<-readLines("https://projecteuler.net/problem=18") ## Read in the data from the webpage.
+  x<-x[(50+11):(50+25)] ## We only care about the numbers in the triangle.
+  x<-gsub("<br />","",x) ## Get rid of HTML tags.
+  x<-gsub("</p>","",x)
+  x<-gsub("<p style=\"text-align:center;font-family:'courier new';\">","",x)
+  x<-strsplit(x," ")
+  s<-length(x)
+  m<-matrix(0,s,s)
+  for(i in 1:s){
+    y<-as.numeric(unlist(x[i]))
+    m[i,1:length(y)]<-y  ## store the numbers as numeric values in a matrix where everything else is 0.
+  }
+
+  for(i in 1:(s-1)){
+    for(j in 1:(s-i)){
+      m[s-i,j]<-m[s-i,j]+max(m[s-i+1,j],m[s-i+1,j+1]) ## Starting at the 
+      ## second-most bottom layer, replace each value with the sum of that 
+      ## value and the largest adjacent number of the layer below.
+    }
+  }
+  m[1,1] ## Return the first layer sum, which is the maximum sum path.
+}
+
+## All the time is taken up accessing the website.
+## > system.time(maxpathsum())
+## user  system elapsed 
+## 0.00    0.01    0.66 
