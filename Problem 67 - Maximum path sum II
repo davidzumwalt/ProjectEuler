@@ -1,0 +1,63 @@
+## By starting at the top of the triangle below and moving to 
+## adjacent numbers on the row below, the maximum total from top 
+## to bottom is 23.
+
+##    3
+##   7 4
+##  2 4 6
+## 8 5 9 3
+
+## That is, 3 + 7 + 4 + 9 = 23.
+
+## Find the maximum total from top to bottom in triangle.txt 
+## (right click and 'Save Link/Target As...'), a 15K text file containing 
+## a triangle with one-hundred rows.
+
+## NOTE: This is a much more difficult version of Problem 18. It is not 
+## possible to try every route to solve this problem, as there are 2^99 
+## altogether! If you could check one trillion (10^12) routes every second 
+## it would take over twenty billion years to check them all. There is an 
+## efficient algorithm to solve it. ;o)
+
+## The answer is 7273.
+
+## This problem is identical to Problem 18, so we just use the same methods.
+
+## The basic method here is very similar to problem 15 in that at each layer, you 
+## only care about what's going on to the right or below you 
+## (or to the down and right, or down and left in this case). This 
+## reduction of space lends itself to a dynamic programming approach.
+
+## Instead of dealing with triangles, we'll store the data in a matrix with the rest of the matrix being 0s.
+
+## Then, starting at the second layer from the bottom, we'll replace the 
+## values of the matrix with the sum of the value and whatever is the 
+## largest of the adjacent values of the layer below. Then we'll work our way
+## up to the top layer, where the value will be replaced by the largest sum path.
+
+## Working bottom up is essential to avoid local minima.
+
+maxpathsumII<-function(){
+  options(warn=-1) ## Get rid of a warning in readLines.
+  x<-readLines("https://projecteuler.net/project/resources/p067_triangle.txt") ## Read in the data from the webpage.
+  x<-strsplit(x," ")
+  s<-length(x)
+  m<-matrix(0,s,s)
+  for(i in 1:s){
+    y<-as.numeric(unlist(x[i]))
+    m[i,1:length(y)]<-y ## store the numbers as numeric values in a matrix where everything else is 0.
+  }
+  for(i in 1:(s-1)){
+    for(j in 1:(s-i)){
+      m[s-i,j]<-m[s-i,j]+max(m[s-i+1,j],m[s-i+1,j+1]) ## Starting at the 
+      ## second-most bottom layer, replace each value with the sum of that 
+      ## value and the largest adjacent number of the layer below.
+    }
+  }
+  m[1,1] ## Return the first layer sum, which is the maximum sum path.
+}
+
+## Most of the time is spent accessing the webpage.
+## > system.time(maxpathsumII())
+## user  system elapsed 
+## 0.08    0.02    0.59 
