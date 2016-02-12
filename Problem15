@@ -1,0 +1,36 @@
+## Starting in the top left corner of a 2×2 grid, and only being able 
+## to move to the right and down, there are exactly 6 routes to the 
+## bottom right corner.
+
+## How many such routes are there through a 20×20 grid?
+
+## The answer is 137846528820.
+
+## Here I am using a dynamic programming technique by building up the answer from
+## a subset of the entire space. The answer is given naturally from this growth.
+
+## This was one of my favorite problems to work on, since many other problems rely on 
+## similar methods to solve them efficiently.
+
+
+latticepaths <- function(n = 20, x = 1, y = 1) {
+  n <- n + 1 ## a grid of nxn squares will have n+1 x n+1 points
+  m <- matrix(nrow = n,ncol = n) ## initialize matrix
+  m[,n] <- 1 ## set far right and bottom points to be 1, since there is 
+  ## only one way to the bottom right corner from these spots
+  m[n,] <- 1
+  for (j in 1:(n - 1)) { ## Start at the n-1, n-1 point, since we have values 
+    ## for n,n-1, and n-1,n already initialized
+    for (i in 1:(n - 1)) {
+      m[n - i,n - j] <- (m[n + 1 - i,n - j] + m[n - i,n + 1 - j]) ## Add up the number of ways 
+      ## to get to the bottom right of the point directly below and directly to the right of the current point 
+      ## and set that to be the number of options of the current point
+      ## then work your way through the entire matrix until you reach the starting point.
+    }
+  }
+  m[x,y] # return the number of ways to get to the bottom right from a given point (default the top left)
+}
+
+## > system.time(latticepaths())
+## user  system elapsed 
+## 0       0       0 
