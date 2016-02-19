@@ -1,0 +1,57 @@
+## A perfect number is a number for which the sum of its proper divisors is
+## exactly equal to the number. For example, the sum of the proper divisors 
+## of 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect 
+## number.
+
+## A number n is called deficient if the sum of its proper divisors is less 
+## than n and it is called abundant if this sum exceeds n.
+
+## As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the 
+## smallest number that can be written as the sum of two abundant numbers 
+## is 24. By mathematical analysis, it can be shown that all integers 
+## greater than 28123 can be written as the sum of two abundant numbers. 
+## However, this upper limit cannot be reduced any further by analysis even 
+## though it is known that the greatest number that cannot be expressed as 
+## the sum of two abundant numbers is less than this limit.
+
+## Find the sum of all the positive integers which cannot be written as the 
+## sum of two abundant numbers.
+
+## The answer is 4179871.
+
+nonabundantsums <- function(x = 20161) { ## Indeed, the last number which cannot be written as the sum of two abundants is only 20161, not 28123.
+  ## This has been stated elsewhere (http://mathworld.wolfram.com/AbundantNumber.html) but examining the list of abundant numbers shows that it is the case as well.
+  source('sumofdivisors.R') ## Source the necessary functions (see https://github.com/davidzumwalt/ProjectEuler to download them)
+  source('primefactors.R')
+  source('sieve.R')
+  y <- sieve(2,x) ## Create a list of prime numbers up to x
+  abundants <- vector(mode = 'numeric') ## Initialize vector of abundant numbers
+  
+  for (i in 2:x) { ## Generate all abundant numbers up to the limit x
+    if ((sumofdivisors(i,y,1) - i) > i) { ## Abundancy check
+      abundants <- append(abundants,i)
+    }
+  }
+  
+  l <- length(abundants) 
+  abundantsums <- matrix(0,l,l) ## Initialize a matrix for easy filling
+  ## This is pretty memory intensive, but much faster than appending or nested for loops.
+  ## We'll reduce the memory quickly by flattening it back into a vector.
+  for (i in 1:l) { 
+    abundantsums[i,i:l] <- abundants[i] + abundants[i:l] ## Filling the matrix with all possible sums of abundant numbers up to the limit.
+  }
+  
+  abundantsums <- c(t(abundantsums)) ## Flatten the matrix into a vector.
+  abundantsums <- abundantsums[abundantsums != 0] ## Get rid of the unnecessary 0s that were part of the matrix.
+  abundantsums <- abundantsums[abundantsums <= x] ## Some sums will be larger than the limit, and we don't need them.
+  abundantsums <- unique(abundantsums) ## There are multiple ways to make some sums, so we only accept one of each.
+  t <- setdiff(1:x,abundantsums) ## Now compare the list of numbers from 1:x and retain only those which are not in the abundantsums vector.
+  sum(t) ## Return the sum of all the numbers which are not in the abundantsums vector.
+}
+
+## Pretty slow, but R is generally not as fast as Python or C/C++ anyway.
+## The vectorization of R does make the code somewhat simpler than comparable code in C.
+
+## > system.time(nonabundantsums())
+## user  system elapsed 
+## 15.06    0.66   15.92 
