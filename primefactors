@@ -1,0 +1,68 @@
+primefactors <- function(x,y = 0) {
+  if (y[1] == 0) {
+    ## Flag indicating whether or not the list of primes has already been generated so don't regenerate one.
+    source('sieve.R')
+    y <-
+      sieve(x,x) ## If the list of primes from 1:x has not been generated, generate it.
+  }
+  tempnum <- x ## Initializing vectors
+  j <- 1
+  num <- numeric()
+  
+  ## This is a variation of the trial division method for prime factorization
+  ## https://en.wikipedia.org/wiki/Trial_division
+  ## The primary difference is that I don't want to generate primes every time
+  ## I call the function, so I do things slightly differently.
+  
+  for (i in 1:sqrt(x)) {
+    if (y[i] ^ 2 > x)
+      break
+    while (tempnum %% y[i] == 0) {
+      num[j] <- y[i]
+      tempnum <- tempnum / y[i]
+      j <- j + 1
+    }
+    
+  }
+  
+  if (length(num) == 0) {
+    ## If no prime factors have been found from 1:sqrt(x), then x is prime itself.
+    num <- x
+  }
+  
+  ## Now I'm checking for primes larger than y[sqrt(x)] I may have missed.
+  ## For example, y[sqrt(254)] = 47, so I'm only checking primes from 2:47.
+  ## However, the prime factors of 254 are 2 and 127, so I would have missed 127.
+  ## I can recover this prime by dividing 254 by the prime factors I've found (2),
+  ## and then checking if this quotient is also prime. Indeed, 127 = 254/2, so I would append 127.
+  
+  ## I also need to include the powers of the primes in this division.
+  ## For example, y[sqrt(244)] = 47, so I'm only checking primes from 2:47.
+  ## However, the prime factors of 244 are 2^2 and 61, so I would have missed 61 if I had only divided by 2 instead of 2^2.
+  ## I can recover this prime by dividing 244 by the prime factors I've found raised to their power (2^2),
+  ## and then checking if this quotient is also prime. Indeed, 61 = 244/2^2, so I would append 61.
+  
+  for (i in 1:length(num)) {
+    tempproduct <- prod(num[num == num[i]])
+    if (!(x / tempproduct) %in% num && (x / tempproduct) %in% y) {
+      num <- append(num,x / tempproduct)
+    }
+  }
+  
+  ## I also need to do a final check to make sure that the number divided by the product of the prime factors I've found is also prime.
+  ## If it is, then I append that number.
+  ## For example, 438 has prime factors 2, 3, and 73, but 73 would have been missed as y[sqrt(438)] is only 71.
+  ## Dividing by 2 or 3 would not have found 73 either. Only by dividing by 2 and 3 would we recover 73, find that it is prime, and then append it.
+  
+  if (!(x / prod(num)) %in% num && (x / prod(num)) %in% y) {
+    num <- append(num,x / prod(num))
+  }
+  
+  table(num) ## Return a table with the prime factors (and their powers) of the input number.
+  
+  ## Example:
+  ## > primefactors(438,y)
+  ## num
+  ## 2  3 73
+  ## 1  1  1
+}
