@@ -1,0 +1,39 @@
+## Let d(n) be defined as the sum of proper divisors of n (numbers less 
+## than n which divide evenly into n).
+## If d(a) = b and d(b) = a, where a ≠ b, then a and b are an amicable pair 
+## and each of a and b are called amicable numbers.
+
+## For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55 and 110; 
+## therefore d(220) = 284. The proper divisors of 284 are 1, 2, 4, 71 and 142; 
+## so d(284) = 220.
+
+## Evaluate the sum of all the amicable numbers under 10000.
+
+## The answer is 31626.
+
+amicable <- function(x = 1000) {
+  source('sumofdivisors.R') ## Source the necessary functions (see https://github.com/davidzumwalt/ProjectEuler to download them)
+  source('primefactors.R')
+  source('sieve.R')
+  y <- sieve(2,x) ## Create a list of prime numbers up to x
+  amicables <- vector(mode = 'numeric') ## Initialize vector of amicable numbers
+  
+  for (i in 2:x) {  ## Generate all amicable numbers up to the limit x
+    if(i%in%y) next ## If i is prime, skip it since it cannot be an amicable pair
+
+    atest <- sumofdivisors(i,y,1) - i ## Compute proper divisors of i
+    btest <- sumofdivisors(atest,y,1) - atest ## Compute proper divisors of i
+    
+    if (btest == i && btest != atest) {    ## Amicability check
+      amicables <- append(amicables,c(btest,i)) ## Add the amicables to the list
+    }
+  }
+  amicables <- unique(amicables) ## Remove duplicates
+  sum(amicables) ## Return the sum of all amicable pairs
+}
+
+
+
+## > system.time(amicable(10000))
+## user  system elapsed 
+## 7.86    0.00    7.89 
