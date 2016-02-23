@@ -1,0 +1,30 @@
+## The number, 197, is called a circular prime because all rotations of the
+## digits: 197, 971, and 719, are themselves prime.
+
+## There are thirteen such primes below 100: 
+## 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+
+## How many circular primes are there below one million?
+
+## The answer is 55.
+
+circularprimes <- function(x = 1e6) {
+  source('sieve.R') ## Source the necessary functions (see https://github.com/davidzumwalt/ProjectEuler to download them)
+  source('cyclicpermute.R')
+  y <- sieve(2,x) ## Create a vector of all primes <=x.
+  z <- y[y >= 11] ## Reduce the primes to only those above 11 since we will treat 2, 3, 5, and 7 separately.
+  sum <- 4 ## 2, 3, 5, 7 also count, but I'm starting at double digits, so I add them in the beginning.
+  b <- c(0,2,4,5,6,8) ## If the number contains any of these numbers, at least one of its cyclic permutations will not be prime, so we will discount them.
+  for (i in z) {
+    a <- unlist(strsplit(as.character(i),""))
+    if (sum(b %in% a) != 0) { ## Check if the number contains any of the elements of b. If so, discard it and move on.
+      next
+    }
+    
+    if (prod(cyclicpermute(i) %in% z)) { ## If all of the elements of the cycle are prime, add one to the total.
+      sum <- sum + 1
+    }
+    
+  }
+  sum ## Return the total number of numbers <=x whose cyclic permutations are all prime.
+}
