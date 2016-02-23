@@ -1,0 +1,18 @@
+## This function takes an integer as an input and return a vector of all circular permutations of that number.
+
+## For example, if you entered 3967 as an input, it would return a vector containing 3967, 7396, 6739, and 9673.
+
+
+cyclicpermute <- function(n) {
+  numdigits <- floor(log(n,10)) + 1 ## This finds the number of digits in a number
+  vec <- vector(mode = 'numeric',length = numdigits) ## Initialize vector.
+  if (n < 10) { ## No permutations are needed for numbers below 10
+    return(n)
+  }
+  vec[1] <- n ## The first element of the vector will just be the number itself.
+  for (i in 2:length(vec)) {
+    n <- floor((n / 10) + (n %% 10) * 10^(numdigits-1)) ## This takes the last digit of a number, removes it, and places it at the front of the number
+    vec[i] <- n ## Store the newly cycled number in the vector
+  }
+  vec ## Return the vector of cycled permutations.
+}
