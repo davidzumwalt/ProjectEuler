@@ -1,0 +1,32 @@
+## This function takes in a number and returns a vector of all 
+## left and right truncations of that number.
+
+## Example: If the input number were 1234, this function would return 
+## 1234, 123, 12, 1, 234, 34, 4.
+
+lrtruncate <- function(n) {
+  
+  numdigits <- floor(log(n,10)) + 1 ## This finds the number of digits in a number
+  
+  lvec <- vector(mode = 'numeric',length = numdigits) ## Initialize vector.
+  rvec <- vector(mode = 'numeric',length = numdigits)
+  
+  if (n < 10) { ## No truncations are needed for numbers below 10
+    return(n)
+  }
+  
+  lvec[1] <- n ## The first element of the vector will just be the number itself.
+  rvec[1] <- n
+  
+  x <- n ## Store the number as temporary variables for truncation
+  y <- n
+  
+  for (i in 2:length(lvec)) {
+    x <- floor(x / 10) ## Truncate from the right to the left
+    lvec[i] <- x ## Store all truncations
+    
+    y <- y - floor(y / 10 ^ (numdigits - (i - 1))) * 10 ^ (numdigits - (i - 1)) ## Truncate from the left to the right
+    rvec[i] <- y ## Store all truncations
+  }
+  vec <- unique(append(lvec,rvec)) ## Return the vector of cycled permutations.
+}
