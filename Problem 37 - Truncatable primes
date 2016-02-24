@@ -46,6 +46,7 @@ truncatableprimes<-function(){
   total ## Return the total sum of all truncatable primes
 }
 
+
 ## > system.time(truncatableprimes())
 ## user  system elapsed 
 ## 5.33    0.00    5.38 
