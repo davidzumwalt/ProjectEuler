@@ -1,0 +1,51 @@
+## The number 3797 has an interesting property. Being prime itself, it is 
+## possible to continuously remove digits from left to right, and remain 
+## prime at each stage: 3797, 797, 97, and 7. Similarly we can work from 
+## right to left: 3797, 379, 37, and 3.
+
+## Find the sum of the only eleven primes that are both truncatable from 
+## left to right and right to left.
+
+## NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+
+## The answer is 748317.
+
+## The truncatable primes, ignoring 2, 3, 5, and 7 are 
+## 23, 37, 53, 73, 313, 317, 373, 797, 3137, 3797, and 739397.
+
+
+truncatableprimes<-function(){
+  source('sieve.R') ## Source the necessary functions (see https://github.com/davidzumwalt/ProjectEuler to download them)
+  source('lrtruncate.R')
+  y <- sieve(56000) ## Create a vector of the first 56000 primes to find all 11, since 739397 is way out there.
+  ## The first 10 were easy enough, but I had to make a large enough upper bound on the prime list to find the last one.
+  
+  z <- y[y >= 11] ## Reduce the primes to only those above 11 since we will skip 2, 3, 5, and 7.
+  
+  b <- c(0,2,4,5,6,8) ## If the number contains any of these numbers, at least one of its cyclic permutations will not be prime, so we will discount them.
+  
+  total<-0 ## Initialize the total
+  
+  for(i in z){
+    numdigits <- floor(log(i,10)) + 1 ## This finds the number of digits in a number
+    x<-(i-i%%10^(numdigits-1))/10^(numdigits-1) ## Finds the leading digit
+    
+    if(!x%in%y[1:4]){ ## If the leading digit isn't a prime, then it won't be a truncatable prime
+      next
+    }
+    
+    a <- unlist(strsplit(as.character(i),""))
+    if (sum(b %in% a[2:length(a)]) != 0) { ## Check if the number contains any of the elements of b after the first digit. If so, discard it and move on.
+      next
+    }
+    
+    if (prod(lrtruncate(i) %in% y)) { ## If all of the elements of the two-sided truncation are prime, add the base number to the total.
+      total <- total + i
+    }
+  }
+  total ## Return the total sum of all truncatable primes
+}
+
+## > system.time(truncatableprimes())
+## user  system elapsed 
+## 5.33    0.00    5.38 
