@@ -1,0 +1,62 @@
+## A unit fraction contains 1 in the numerator. The decimal representation 
+## of the unit fractions with denominators 2 to 10 are given:
+  
+  ## 1/2	= 	0.5
+  ## 1/3	= 	0.(3)
+  ## 1/4	= 	0.25
+  ## 1/5	= 	0.2
+  ## 1/6	= 	0.1(6)
+  ## 1/7	= 	0.(142857)
+  ## 1/8	= 	0.125
+  ## 1/9	= 	0.(1)
+  ## 1/10	= 	0.1
+  ## Where 0.1(6) means 0.166666..., and has a 1-digit recurring cycle. 
+
+## It can be seen that 1/7 has a 6-digit recurring cycle.
+  
+## Find the value of d < 1000 for which 1/d contains the longest 
+## recurring cycle in its decimal fraction part.
+
+## The answer is 983.
+
+library(gmp) ## Load the gmp library so we can use the bigz class for large integers.
+
+source('sieve.R') ## Source the necessary sieve of Eratosthenes to find primes (see https://github.com/davidzumwalt/ProjectEuler to download it)
+
+reciprocalcycles <- function(n = 1000) {
+  y <- sieve(2,n) ## Find primes <=n
+  y <- y[y > 5] ## Only keep primes above 5 (i.e. coprime to 10)
+  lengths <- vector(mode = 'numeric',length = length(y)) ## Initialize vector of multiplicative orders
+ 
+  ## The following code finds the multiplicative order of each 1/p fraction, 
+  ## where p is the primes which are coprime to 10 (i.e. >5)
+  ## https://en.wikipedia.org/wiki/Multiplicative_order
+  
+  ## This method comes from Fermat's little theorem.
+  ## https://en.wikipedia.org/wiki/Fermat%27s_little_theorem
+  
+  ## The multiplicative order is the same as the length of any repeating 
+  ## decimals in the fraction.
+  
+  ## A fraction in lowest terms with a prime denominator other than 2 or 5 
+  ## (i.e. coprime to 10) always produces a repeating decimal.
+  
+  ## Therefore we only need to know when the cycle repeats, i.e. when 
+  ## 10^i = 1 mod p, i will be the multiplicative order and therefore 
+  ## the cycle length.
+
+   for (p in y) {
+    for (i in 1:p) {
+      ordertest <- pow.bigz(10,i)
+      if (ordertest %% p == 1) {
+        lengths[p] <- i
+        break
+      }
+    }
+  }
+  which.max(lengths) ## Return the value with the largest multiplicative order.
+}
+
+## > system.time(reciprocalcycles(1000))
+## user  system elapsed 
+## 1.40    0.00    1.41 
