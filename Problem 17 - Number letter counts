@@ -1,0 +1,54 @@
+## If the numbers 1 to 5 are written out in words: one, two, three, four, 
+## five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
+
+## If all the numbers from 1 to 1000 (one thousand) inclusive were written 
+## out in words, how many letters would be used?
+
+
+## NOTE: Do not count spaces or hyphens. For example, 342 
+## (three hundred and forty-two) contains 23 letters and 115 
+## (one hundred and fifteen) contains 20 letters. The use of "and" when 
+## writing out numbers is in compliance with British usage.
+
+## The answer is 21124.
+
+numlettercounts<-function(){
+
+ hundreds<-c(13,13,15,14,14,13,15,15,14) # This contains the sums 
+ ## for "One hundred and" = 13, "Two hundred and" = 13, and so on up to "Nine hundred and".
+ tens<-c(3,6,6,5,5,5,7,6,6) # This contains the sum of "Ten" = 3, 
+ ## "Twenty" = 6, and so on up to "Ninety".
+ teens<-c(6,6,8,8,7,7,9,8,8) # This contains the sum of "Eleven" = 6, 
+ ## "Twelve" = 6, and so on up to "Nineteen".
+ ones<-c(3,3,5,4,4,3,5,5,4) # This contains the sum of "One" = 3, "Two" = 3, 
+ ## and so on up to "Nine".
+ thousand<-11 # This contains the sum of "One thousand."
+ 
+ # "One hundred and" will occur 101:199 = 99 times - so will "Two hundred and", and so on. 
+ total<-99*sum(hundreds)
+ 
+ # "One hundred" will occur once - so will "Two hundred", and so on.
+ 
+ total<-total+sum(hundreds-3) ## Subtracting three removes the "and."
+
+ #  "Ten" will occur only once for each hundred, so 10 times. 
+  total<-total+10*tens[1] ## "Ten" is the first element of tens.
+  
+# "Twenty" will occur 10 times for each hundred, or 100 times - so will "Thirty", and so on.  
+  total<- total +100*sum(tens[2:9])
+  
+# "Eleven" will occur once for each hundred, or 10 times - so will "Twelve", and so on.
+  total<- total + 10*sum(teens)
+  
+# "One" will occur 9 times for every hundred, since the teens are skipped, or 90 times - as will "two", and so on.
+  total<- total + 90*sum(ones)
+  
+# "One thousand" will occur only once.
+  total<- total + thousand
+  
+  total ## Return the total.
+}
+
+## > system.time(numlettercounts())
+## user  system elapsed 
+## 0       0       0 
