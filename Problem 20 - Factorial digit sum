@@ -1,0 +1,23 @@
+## n! means n × (n − 1) × ... × 3 × 2 × 1
+
+## For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
+## and the sum of the digits in the number 10! is 
+## 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
+
+## Find the sum of the digits in the number 100!
+
+## The answer is 648.
+
+## The only challenge here is that the number is too large to be represented accurately with
+## double-point precision numbers. So we use the gmp library and use the bigz class to compute
+## the factorial instead.
+
+library(gmp) ## Load the gmp library
+
+a<-factorialZ(100)
+b<-unlist(strsplit(as.character(a),''))
+sum(as.numeric(b))
+
+## > system.time(sum(as.numeric(unlist(strsplit(as.character(factorialZ(100)),'')))))
+## user  system elapsed 
+## 0       0       0 
