@@ -1,0 +1,29 @@
+## The decimal number, 585 = 1001001001_2 (binary), is palindromic in both bases.
+
+## Find the sum of all numbers, less than one million, which are palindromic in 
+## base 10 and base 2.
+
+## (Please note that the palindromic number, in either base, may not include 
+## leading zeros.)
+
+## The answer is 872187.
+
+source('isnumberpalindrome.R') ## Source the necessary functions (see https://github.com/davidzumwalt/ProjectEuler to download them)
+
+doublebasepalindromes <- function(n = 1e6) {
+  sum <- 0
+  for (i in seq(1,(n-1),2)) { ## Even numbers cannot be palindromes in binary since they do not end in 1.
+    if (isnumberpalindrome(i)) { ## Check if the number is a palindrome in base 10.
+      b <- paste(as.integer(rev(intToBits(i))), collapse = "") ## Convert to a binary string
+      b <- substr(b,regexpr("[^0]",b),nchar(b)) ## This gets rid of leading zeros in the string.
+      if (isnumberpalindrome(b)) { ## Check if the number is a palindrome in base 2.
+        sum <- sum + i ## If both checks clear, add the decimal number to the sum.
+      }
+    }
+  }
+  sum ## Return the sum.
+}
+
+## > system.time(doublebasepalindromes())
+## user  system elapsed 
+## 7.44    0.00    7.47 
