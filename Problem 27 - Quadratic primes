@@ -1,0 +1,69 @@
+## Euler discovered the remarkable quadratic formula:
+  
+##  n² + n + 41
+
+## It turns out that the formula will produce 40 primes for the consecutive 
+## values n = 0 to 39. However, when n = 40, 402 + 40 + 41 = 40(40 + 1) + 41 
+## is divisible by 41, and certainly when n = 41, 41² + 41 + 41 is clearly 
+## divisible by 41.
+
+## The incredible formula  n² − 79n + 1601 was discovered, which produces 80
+## primes for the consecutive values n = 0 to 79. The product of the 
+## coefficients, −79 and 1601, is −126479.
+
+## Considering quadratics of the form:
+  
+## n² + an + b, where |a| < 1000 and |b| < 1000
+
+## where |n| is the modulus/absolute value of n
+## e.g. |11| = 11 and |−4| = 4
+## Find the product of the coefficients, a and b, for the quadratic expression that produces the maximum number of primes for consecutive values of n, starting with n = 0.
+
+## The answer is (-61*971) = -59231.
+
+## My method below deserves some justification.
+
+## The "incredible formula" n² − 79n + 1601 is part of a class of 
+## prime-producing quadratics.
+
+## It is in fact just an axes shift of Euler's formula: 
+## n² − 79n + 1601 = (n-40)² + (n-40) + 41
+
+## This produces ~twice as many primes as Euler's formula due to the 
+## symmetry of the parabola.
+
+## However, this symmetry means that the "incredible formula" actually 
+## reproduces the primes of Euler's formula ~twice.
+
+## We can substitute 40 for any number x and, by shifting Euler's formula, 
+## we can make a new prime-producing quadratic.
+
+## The task then is to find x such that (n-x)² + (n-x) + 41 yields a constant
+## offset which is < 1000.
+
+## The offset must be positive since primes cannot be negative, and 
+## substituting in n=0 must produce a prime number if the equation is valid.
+
+## Then by expansion we can see that we will get:
+## n² + (− 2*x + 1)*n + (x² - x + 41).
+
+## So our coefficients a and b are (- 2*x + 1) and (x² - x + 41), 
+## respectively, where (x² - x + 41) < 1000.
+
+quadraticprimes <- function() {
+  x <- 0
+  b <- 0
+  while (b < 1000) {
+    x <- x + 1
+    b <- x ^ 2 - x + 41
+  }
+  x <- x - 1 ## The while loop increments x once too many times.
+  a <- (-2 * x + 1)
+  b <- x ^ 2 - x + 41
+
+  a * b
+}
+
+## > system.time(quadraticprimes())
+## user  system elapsed 
+## 0       0       0 
