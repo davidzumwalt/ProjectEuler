@@ -1,11 +1,27 @@
-## Checks if a number is a palindrome by converting it into a vector of characters, then seeing if it is identical to the reversed string.
+## Checks if a number is a palindrome either by modulo arithmetic or by seeing if the character string is identical to the reversed string.
 
-isnumberpalindrome<-function(x){
-  x<-as.character(x)
-  x<-unlist(strsplit(x,""))
-  if(paste(x,collapse="")==paste(rev(x),collapse='')){
-    return(TRUE)
-  } else {
-    return(FALSE)
+isnumberpalindrome <- function(x) {
+  if (is.integer(x)|is.numeric(x)) { ## If the input is not a character, it's faster to use modulo arithmetic than converting to a string.
+    num <- x
+    reverse <- 0
+    while (num > 0)
+    {
+      digit <- num %% 10
+      reverse <- reverse * 10 + digit
+      num <- floor(num / 10)
+    }
+    if (x == reverse) {
+      return(TRUE)
+    } else{
+      return(FALSE)
+    }
+  } else { ## If it's not an integer or numeric value, compare the string to its reverse.
+    x <- as.character(x)
+    x <- unlist(strsplit(x,""))
+    if (paste(x,collapse = "") == paste(rev(x),collapse = "")) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
   }
 }
