@@ -1,0 +1,53 @@
+## Surprisingly there are only three numbers that can be written as the 
+## sum of fourth powers of their digits:
+  
+## 1634 = 1^4 + 6^4 + 3^4 + 4^4
+## 8208 = 8^4 + 2^4 + 0^4 + 8^4
+## 9474 = 9^4 + 4^4 + 7^4 + 4^4
+## As 1 = 1^4 is not a sum it is not included.
+
+## The sum of these numbers is 1634 + 8208 + 9474 = 19316.
+
+## Find the sum of all the numbers that can be written as the sum of 
+## fifth powers of their digits.
+
+## The answer is 443839.
+
+## These numbers are part of the recreational number class called
+## "perfect digital invariant" numbers. The cases where the number of digits is equal
+## to the power raising the digits are called the "narcissistci numbers." 
+## I don't know any way to find them analytically, but we can find an upper
+## limit for a given power n.
+
+## For a k digit number, the largest sum one can make is k*9^n. Therefore,
+## once 10^k is larger than k*9^n, it will be impossible to construct a 
+## sum of k digits raised to the nth power that equals the number itself.
+
+## So we only need to search the space from 2:(10^k = k*9^n).
+
+## The space can be reduced even further by omitting permutations of unsuccessful numbers,
+## but I didn't bother doing that.
+
+digitfifthpowers<-function(n=5){
+  k<-1  
+  while(k*9^n>10^k){ ## Find the nearest integer value of k when 10^k crosses k*9^n
+  k<-k+1
+  }
+  finish<-k*9^n ## For n=5, k=6, and finish = 354294.
+  
+  
+  total<-0
+  for(i in 2:finish){ ## From trial and error I know the first value is 
+    ## over 4000 and the last is below 200000, but this isn't well motivated 
+    ## so I don't make use of it. It saves time by a factor of 2 or so for n=5.
+    s<-sum(as.numeric(unlist(strsplit(as.character(i),"")))^n) ## Calculate the sum of the digits raised to the nth power
+    if(s==i){ ## Check if it's equal the number itself.
+      total<-total+i
+    }
+  }
+  total ## Return the total
+}
+
+## > system.time(digitfifthpowers())
+## user  system elapsed 
+## 3.15    0.00    3.16 
